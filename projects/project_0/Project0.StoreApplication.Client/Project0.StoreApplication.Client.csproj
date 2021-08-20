@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Project0.StoreApplication.Domain\Project0.StoreApplication.Domain.csproj" />
+    <ProjectReference Include="..\Project0.StoreApplication.Storage\Project0.StoreApplication.Storage.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+</Project>
