@@ -1,7 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using Project0.StoreApplication.Domain.Models;
+﻿// procedural programming - DONE
+// functional programming lite - DONE
+// object-oriented programming - DONE
+// unit testing - DONE
+// design patterns: singleton, factory - NEXT
+// structure: SOLID - NEXT
+// serialization - DONE
+// monitoring - DONE
+// debugging - DONE
+
+using System;
 using Project0.StoreApplication.Storage.Repositories;
+using Serilog;
+
 
 namespace Project0.StoreApplication.Client
 {
@@ -9,35 +19,51 @@ namespace Project0.StoreApplication.Client
   {
     static void Main(string[] args)
     {
-      var p = new Program();
+      Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
 
-      p.PrintAllStoreLocations();
+      var program = new Program();
 
-      System.Console.WriteLine(p.SelectAStore());
+      program.CaptureOutput();
+
     }
 
-    void PrintAllStoreLocations()
+    private void OutputStores()
     {
+      // verbose
+      // debug
+      // info
+      // warn
+      // error
+      // fatal
+
+      Log.Information("mehtod outpoutstores");
+
       var storeRepository = new StoreRepository();
-      int i = 1;
 
       foreach (var store in storeRepository.Stores)
       {
-        System.Console.WriteLine(i + " - " + store);
-        i += 1;
+        Console.WriteLine(store);
       }
     }
 
-    Store SelectAStore()
+    private int CaptureInput()
     {
-      var sr = new StoreRepository().Stores;
+      Log.Information("in method captureinput");
 
-      Console.WriteLine("Select a Store: ");
+      OutputStores();
 
-      var option = int.Parse(Console.ReadLine());
-      var store = sr[option - 1];
+      Console.WriteLine("pick a store:");
 
-      return store;
+      int selected = int.Parse(Console.ReadLine());
+
+      return selected;
+    }
+
+    private void CaptureOutput()
+    {
+      var storeRepository = new StoreRepository();
+
+      Console.WriteLine("you have selected: " + " " + storeRepository.Stores[CaptureInput()]);
     }
   }
 }

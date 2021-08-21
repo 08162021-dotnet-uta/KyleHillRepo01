@@ -1,20 +1,29 @@
 using System.Collections.Generic;
+using Project0.StoreApplication.Domain.Abstracts;
 using Project0.StoreApplication.Domain.Models;
+using Project0.StoreApplication.Storage.Adapters;
 
 namespace Project0.StoreApplication.Storage.Repositories
 {
   public class StoreRepository
   {
-    public List<Store> Stores { get; set; }
+    public List<Store> Stores { get; }
 
     public StoreRepository()
     {
-      Stores = new List<Store>()
-      {
-        new Store(){ Name = "Store001" },
-        new Store(){ Name = "Store002" },
-        new Store(){ Name = "Store003" }
-      };
+      var fileAdapter = new FileAdapter();
+
+      // if (fileAdapter.ReadFromFile() == null)
+      // {
+      //   fileAdapter.WriteToFile(new List<Store>()
+      //   {
+      //     new AthleticStore(),
+      //     new GroceryStore(),
+      //     new OnlineStore()
+      //   });
+      // }
+
+      Stores = fileAdapter.ReadFromFile();
     }
   }
 }
