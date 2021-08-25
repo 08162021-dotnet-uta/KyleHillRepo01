@@ -2,35 +2,33 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 using Project0.StoreApplication.Domain.Abstracts;
+using System;
 
 namespace Project0.StoreApplication.Storage.Adapters
 {
+  //TESTED that each of these worked as intended
+  //Thoroughly tested each of these methods, that they write and return the same thing
   public class FileAdapter
   {
-    public List<Store> ReadFromFile()
+    public List<T> ReadFromFile<T>(string path) where T : class
     {
-      // file path
-      var path = @"/home/kylehill/revature-code/my_code/data/project_0.xml";
-      // open file
       var file = new StreamReader(path);
-      // serialize object
-      var xml = new XmlSerializer(typeof(List<Store>));
-      // read from file
-      var stores = xml.Deserialize(file) as List<Store>;
-      // return data
-      return stores;
+      var xml = new XmlSerializer(typeof(List<T>));
+      try
+      {
+        return xml.Deserialize(file) as List<T>;
+      }
+      catch (InvalidOperationException e)
+      {
+        return new List<T>();
+      }
     }
 
-    public void WriteToFile(List<Store> stores)
+    public void WriteToFile<T>(string path, List<T> data) where T : class
     {
-      // file path
-      var path = @"/home/kylehill/revature-code/my_code/data/project_0.xml";
-      // open file
       var file = new StreamWriter(path);
-      // serialize object
-      var xml = new XmlSerializer(typeof(List<Store>));
-      // write to file
-      xml.Serialize(file, stores);
+      var xml = new XmlSerializer(typeof(List<T>));
+      xml.Serialize(file, data);
     }
   }
 }

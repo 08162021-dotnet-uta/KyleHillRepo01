@@ -23,7 +23,7 @@ namespace Project0.StoreApplication.Storage.Repositories
       //   });
       // }
 
-      Stores = fileAdapter.ReadFromFile();
+      //Stores = fileAdapter.ReadFromFile();
     }
   }
 }

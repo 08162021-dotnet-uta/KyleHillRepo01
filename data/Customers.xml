@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfCustomer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Customer>
+    <Name>bob</Name>
+  </Customer>
+  <Customer>
+    <Name>sally</Name>
+  </Customer>
+  <Customer>
+    <Name>steve</Name>
+  </Customer>
+  <Customer>
+    <Name>mark</Name>
+  </Customer>
+  <Customer>
+    <Name>joe</Name>
+  </Customer>
+  <Customer>
+    <Name>nick</Name>
+  </Customer>
+</ArrayOfCustomer>
