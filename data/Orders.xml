@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfOrder xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Order>
+    <Products>
+      <Product>
+        <Name>Calzone</Name>
+        <Price>4.99</Price>
+      </Product>
+    </Products>
+    <Store>
+      <Name>Elyria</Name>
+      <Orders />
+    </Store>
+    <Customer>
+      <Name>george</Name>
+      <Orders />
+    </Customer>
+  </Order>
+  <Order>
+    <Products>
+      <Product>
+        <Name>cheese</Name>
+        <Price>4.99</Price>
+      </Product>
+      <Product>
+        <Name>corn</Name>
+        <Price>0</Price>
+      </Product>
+    </Products>
+    <Store>
+      <Name>amherst</Name>
+      <Orders />
+    </Store>
+    <Customer>
+      <Name>bill</Name>
+      <Orders />
+    </Customer>
+  </Order>
+  <Order>
+    <Products>
+      <Product>
+        <Name>cheese</Name>
+        <Price>4.99</Price>
+      </Product>
+      <Product>
+        <Name>corn</Name>
+        <Price>0</Price>
+      </Product>
+    </Products>
+    <Store>
+      <Name>amherst</Name>
+    </Store>
+    <Customer>
+      <Name>bill</Name>
+    </Customer>
+  </Order>
+</ArrayOfOrder>

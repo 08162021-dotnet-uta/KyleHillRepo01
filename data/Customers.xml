@@ -7,15 +7,6 @@
     <Name>sally</Name>
   </Customer>
   <Customer>
-    <Name>steve</Name>
-  </Customer>
-  <Customer>
-    <Name>mark</Name>
-  </Customer>
-  <Customer>
-    <Name>joe</Name>
-  </Customer>
-  <Customer>
-    <Name>nick</Name>
+    <Name>george</Name>
   </Customer>
 </ArrayOfCustomer>
