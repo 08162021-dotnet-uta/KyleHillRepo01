@@ -9,7 +9,7 @@ namespace Project0.StoreApplication.Storage.Repositories
   /// </summary>
   public class ProductRepository 
   {
-    private const string _path = @"/home/kylehill/revature-code/my_code/data/Products.xml";
+    private const string _path = @"data/Products.xml";
     private static readonly FileAdapter _fileAdapter = new FileAdapter();
 
     public ProductRepository()

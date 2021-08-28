@@ -28,7 +28,7 @@ namespace Project0.StoreApplication.Client
     private static readonly StoreSingleton _storeSingleton = StoreSingleton.Instance;
     private static readonly ProductSingleton _productSingleton = ProductSingleton.Instance;
     private static readonly OrderSingleton _orderSingleton = OrderSingleton.Instance;
-    private const string _logFilePath = @"/home/kylehill/revature-code/my_code/data/logs.txt";
+    private const string _logFilePath = @"data/logs.txt";
 
 
     /// <summary>
@@ -38,14 +38,11 @@ namespace Project0.StoreApplication.Client
     private static void Main(string[] args)
     {
       Log.Logger = new LoggerConfiguration().WriteTo.File(_logFilePath).CreateLogger();
-     // Console.SetIn(new StringReader("testing"));
-     // Console.WriteLine(Console.ReadLine());
-      //Run();
-      FileAdapter fileAdapter = new FileAdapter();
-      List<Order> orders = fileAdapter.ReadFromFile<Order>("/home/kylehill/revature-code/my_code/data/Orders.xml");
-      foreach(Order order in orders)
-        Console.WriteLine(order.Customer.ToString() + " " + order.Store.ToString());
-    }
+      Run();
+      
+       
+
+        }
 
     /// <summary>
     /// 
@@ -110,7 +107,7 @@ namespace Project0.StoreApplication.Client
         {
           //need to do validation on this input
           if (input == 1) PlaceOrderOrViewPastOrders(_customerSingleton.Customers[Capture<Customer>(_customerSingleton.Customers)]);
-          else if (input == 2) Console.WriteLine("input == 2");
+          else if (input == 2) ViewPastOrders(_storeSingleton.Stores[Capture<Store>(_storeSingleton.Stores)]);
           else if (input == 3) Environment.Exit(0);
           //handles wrong integer input
           else Console.WriteLine("Invalid input. Try Again.");
@@ -120,7 +117,18 @@ namespace Project0.StoreApplication.Client
       }
     }
 
-    private static void PlaceOrderOrViewPastOrders(Customer customer)
+    private static void ViewPastOrders(Store store)
+    {
+        foreach (Order order in _orderSingleton.Orders)
+            if (order.Store.Name.Equals(store.Name))
+                store.Orders.Add(order);
+        foreach (Order order in store.Orders)
+            Console.WriteLine(order);
+        if (store.Orders.Count == 0) Console.WriteLine("No orders have been placed here!");
+        store.Orders.Clear();
+    }
+
+        private static void PlaceOrderOrViewPastOrders(Customer customer)
     {
       Console.WriteLine("Do you want to place an order(1) or view past orders(2)? Press (3) to close the program.");
       int input;
@@ -129,7 +137,7 @@ namespace Project0.StoreApplication.Client
         if (int.TryParse(Console.ReadLine(), out input))
         {
           if (input == 1) ViewMenu_AddToCart_PlaceOrder(customer, _storeSingleton.Stores[Capture<Store>(_storeSingleton.Stores)]);
-          else if (input == 2) ViewPastOrders();
+          else if (input == 2) ViewPastOrders(customer);
           else if (input == 3) Environment.Exit(0);
           //handles wrong integer input
           else Console.WriteLine("Invalid input. Try Again.");
@@ -139,7 +147,17 @@ namespace Project0.StoreApplication.Client
       }
     }
 
-    private static void ViewPastOrders() { }
+    private static void ViewPastOrders(Customer customer) {
+
+        foreach (Order order in _orderSingleton.Orders)
+            if (order.Customer.Name.Equals(customer.Name))
+                customer.Orders.Add(order);
+        foreach (Order order in customer.Orders)
+            Console.WriteLine(order);
+        if (customer.Orders.Count == 0) Console.WriteLine("You have not placed any orders!");
+        customer.Orders.Clear();
+        PlaceOrderOrViewPastOrders(customer);
+    }
 
     //displaying cart not part of MVP
     private static void ViewMenu_AddToCart_PlaceOrder(Customer customer, Store store)
@@ -147,33 +165,47 @@ namespace Project0.StoreApplication.Client
       List<Product> Cart = new List<Product>();
       List<Product> Menu = _productSingleton.Products;
       int input;
+        double totalCost = 0;
       while (true)
       {
-        DisplayMenuAndCart(Cart, Menu);
+        DisplayMenuAndCart(Cart, Menu, totalCost);
         if (int.TryParse(Console.ReadLine(), out input))
         {
-          if (input == 0) { PlaceOrder(_orderSingleton,Cart, customer, store); Environment.Exit(0); }
-          else if (input > 0) Cart.Add(Menu[input - 1]);
-          else if (input < 0) Cart.RemoveAt(-input - 1);
-          //handles wrong integer input
-          else Console.WriteLine("Invalid input. Try Again.");
+            if (input == 0)
+                if (Cart.Count == 0) Console.WriteLine("You need at least one item in your cart to place an order.");
+                else PlaceOrder(_orderSingleton, Cart, customer, store, totalCost);
+            else if (input > 0)
+                if (CanAddItemToCart(Cart, Menu, totalCost, input)) { Cart.Add(Menu[input - 1]); totalCost += Menu[input - 1].Price; }
+                else Console.WriteLine("Cart max: 50 items, Cost max: $500");
+            else if (input < 0) { Cart.RemoveAt(-input - 1); totalCost -= Menu[-input - 1].Price; }
+            //handles wrong integer input
+            else Console.WriteLine("Invalid input. Try Again.");
         }
         //handles not integer input
         else Console.WriteLine("Invalid input. Try Again");
       }
     }
 
-    public static Order PlaceOrder(OrderSingleton orderSingleton,List<Product> Cart, Customer customer, Store store)
+    private static bool CanAddItemToCart(List<Product> cart, List<Product> menu, double totalCost, int input)
     {
-      Order order = new Order();
-      order.Products = Cart;
-      order.Customer = customer;
-      order.Store = store;
-      orderSingleton.Add(order);
-      return order;
+            if (cart.Count + 1 <= 50 && totalCost + menu[input - 1].Price <= 500) return true;
+            else return false;
     }
 
-    private static void DisplayMenuAndCart(List<Product> Cart, List<Product> Menu)
+    public static void PlaceOrder(OrderSingleton orderSingleton,List<Product> Cart, Customer customer, Store store, double totalCost)
+    {
+        Order order = new Order();
+        order.Products = Cart;
+        order.Customer = customer;
+        order.Store = store;
+        order.TotalCost = totalCost;
+        order.Date = DateTime.Now;       
+        orderSingleton.Add(order);
+        Console.WriteLine("Your order has been placed!");
+        PlaceOrderOrViewPastOrders(customer);
+    }
+
+    private static void DisplayMenuAndCart(List<Product> Cart, List<Product> Menu, double totalCost)
     {
       int index = 1;
       Console.WriteLine("MENU");
@@ -189,6 +221,7 @@ namespace Project0.StoreApplication.Client
         Console.WriteLine($"{index,-3}|{item.Name,-20}|{item.Price,6}");
         index--;
       }
+      Console.WriteLine($"Total Cost = {totalCost}");
       Console.WriteLine("Type 0 to submit your order.");
     }
 
@@ -222,7 +255,7 @@ namespace Project0.StoreApplication.Client
       {
         if (int.TryParse(Console.ReadLine(), out input))
         {
-          if (1 < input || input > data.Count) Console.WriteLine("Invalid input. Try Again.");
+          if (1 > input || input > data.Count) Console.WriteLine("Invalid input. Try Again.");
           else return (input - 1);
         }
         //handles not integer input

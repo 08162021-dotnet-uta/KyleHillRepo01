@@ -21,7 +21,7 @@ namespace Project0.StoreApplication.Domain.Models
     /// <returns></returns>
     public override string ToString()
     {
-      return $"{Name} with {Orders.Count} Orders so far";
+      return $"{Name}";
     }
   }
 }

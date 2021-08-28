@@ -10,7 +10,7 @@ namespace Project0.StoreApplication.Storage.Repositories
   /// </summary>
   public class OrderRepository : IRepository<Order>
   {
-    private const string _path = @"/home/kylehill/revature-code/my_code/data/Orders.xml";
+    private const string _path = @"data/Orders.xml";
     private static readonly FileAdapter _fileAdapter = new FileAdapter();
 
     public OrderRepository()

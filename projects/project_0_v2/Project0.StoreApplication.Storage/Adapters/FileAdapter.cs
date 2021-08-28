@@ -20,11 +20,12 @@ namespace Project0.StoreApplication.Storage.Adapters
         return null;
       }
 
-      var file = new StreamReader(path);
-      var xml = new XmlSerializer(typeof(List<T>));
-      var result = xml.Deserialize(file) as List<T>;
-
-      return result;
+            using (var file = new StreamReader(path))
+            {
+                var xml = new XmlSerializer(typeof(List<T>));
+                return xml.Deserialize(file) as List<T>;
+            }
+      //return result;
     }
 
     /// <summary>
@@ -33,10 +34,11 @@ namespace Project0.StoreApplication.Storage.Adapters
     /// <typeparam name="T"></typeparam>
     public void WriteToFile<T>(string path, List<T> data) where T : class, new()
     {
-      var file = new StreamWriter(path);
-      var xml = new XmlSerializer(typeof(List<T>));
-
-      xml.Serialize(file, data);
+            using (var file = new StreamWriter(path))
+            {
+                var xml = new XmlSerializer(typeof(List<T>));
+                xml.Serialize(file, data);
+            }
     }
   }
 }
