@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Project0.StoreApplication.Domain.Models;
 using Project0.StoreApplication.Storage.Repositories;
+using Serilog;
 
 namespace Project0.StoreApplication.Client.Singletons
 {
@@ -31,6 +32,7 @@ namespace Project0.StoreApplication.Client.Singletons
     /// </summary>
     private CustomerSingleton()
     {
+      Log.Information("Instantiate customer singleton");
       Customers = _customerRepository.Select();
     }
 

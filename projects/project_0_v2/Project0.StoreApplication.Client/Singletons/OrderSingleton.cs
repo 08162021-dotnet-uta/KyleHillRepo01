@@ -1,13 +1,15 @@
 using System.Collections.Generic;
 using Project0.StoreApplication.Domain.Models;
 using Project0.StoreApplication.Storage.Repositories;
+using Project0.StoreApplication.Domain;
+using Serilog;
 
 namespace Project0.StoreApplication.Client.Singletons
 {
   /// <summary>
   /// 
   /// </summary>
-  public class OrderSingleton
+  public class OrderSingleton 
   {
     private static OrderSingleton _orderSingleton;
     private static readonly OrderRepository _orderRepository = new OrderRepository();
@@ -15,6 +17,8 @@ namespace Project0.StoreApplication.Client.Singletons
     public List<Order> Orders { get; private set; }
     public static OrderSingleton Instance
     {
+      
+    
       get
       {
         if (_orderSingleton == null)

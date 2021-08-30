@@ -19,7 +19,6 @@ namespace Project0.StoreApplication.Storage.Adapters
       {
         return null;
       }
-
             using (var file = new StreamReader(path))
             {
                 var xml = new XmlSerializer(typeof(List<T>));

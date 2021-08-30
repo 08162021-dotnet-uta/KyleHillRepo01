@@ -1,3 +1,5 @@
+using System;
+
 namespace Project0.StoreApplication.Domain.Models
 {
   /// <summary>
@@ -7,11 +9,11 @@ namespace Project0.StoreApplication.Domain.Models
   {
     public byte ProductID {get;set;}
     public string Name { get; set; }
-    public double Price { get; set; }
+    public decimal Price { get; set; }
 
     public override string ToString()
     {
-        return $"{Name} | {Price}";
+        return $"{Name} | {Decimal.Round(Price,2)}";
     }
 
 
