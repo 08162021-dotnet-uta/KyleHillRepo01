@@ -16,7 +16,7 @@ namespace Project0.StoreApplication.Client.UserViews
         internal static void CustomerOrLocation(CustomerSingleton customerSingleton, StoreSingleton storeSingleton, OrderSingleton orderSingleton)
         {
             Log.Information("User chooses whether they are customer or location");
-            Console.WriteLine("Are you a customer(1) or employee(2)? Press (3) to close the program.");
+            Console.WriteLine("Welcome to Kyle's Pizza Shop. Are you a customer(1) or employee(2)? Press (3) to close the program.");
             int input;
             while (true)
             {
