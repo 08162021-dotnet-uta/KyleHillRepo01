@@ -10,6 +10,7 @@ namespace Project0.StoreApplication.Testing
   {
 
     [Fact]
+  //this is trash. don't view right now
     public void Testing()
     {
      

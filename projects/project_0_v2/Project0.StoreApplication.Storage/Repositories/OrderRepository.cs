@@ -8,7 +8,7 @@ namespace Project0.StoreApplication.Storage.Repositories
   /// <summary>
   /// 
   /// </summary>
-  public class OrderRepository : IRepository<Order>
+  public class OrderRepository 
   {
     private const string _path = @"data/Orders.xml";
     private static readonly FileAdapter _fileAdapter = new FileAdapter();

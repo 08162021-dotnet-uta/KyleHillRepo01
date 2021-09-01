@@ -11,16 +11,11 @@ namespace Project0.StoreApplication.Storage.Repositories
   /// </summary>
   public class ProductRepository 
   {
-    //private const string _path = @"data/Products.xml";
-    //private static readonly FileAdapter _fileAdapter = new FileAdapter();
     private readonly DataAdapter _dataAdapter = new DataAdapter();
 
     public ProductRepository()
     {
-      //if (_fileAdapter.ReadFromFile<Product>(_path) == null)
-      //{
-      //  _fileAdapter.WriteToFile<Product>(_path, new List<Product>());
-      //}
+      
     }
 
 
@@ -30,9 +25,7 @@ namespace Project0.StoreApplication.Storage.Repositories
     /// <returns></returns>
     public void Insert(List<Product> entries)
     {
-      //_fileAdapter.WriteToFile<Product>(_path, entries);
-
-      //return true;
+      _dataAdapter.Database.ExecuteSqlRaw("insert into [Store].Product values ('chicken poppers',3.99,1);");
     }
 
     /// <summary>

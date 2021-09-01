@@ -24,7 +24,6 @@ namespace Project0.StoreApplication.Storage.Adapters
                 var xml = new XmlSerializer(typeof(List<T>));
                 return xml.Deserialize(file) as List<T>;
             }
-      //return result;
     }
 
     /// <summary>

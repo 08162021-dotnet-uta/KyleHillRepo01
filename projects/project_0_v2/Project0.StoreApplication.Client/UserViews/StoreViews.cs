@@ -18,7 +18,7 @@ namespace Project0.StoreApplication.Client.UserViews
 
         internal static void ViewOrdersByLocationOrTotal() 
         {
-            Console.WriteLine("Would you like to view sales for the entire company(1) or sales by location(2)?");
+            Console.WriteLine("Are you a regional manager(1) or a store manager(2)? (3) to close program.");
             int input;
             while (true)
             {

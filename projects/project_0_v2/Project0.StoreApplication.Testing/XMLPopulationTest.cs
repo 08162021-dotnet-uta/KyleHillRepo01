@@ -10,6 +10,7 @@ using System.IO;
 
 namespace Project0.StoreApplication.Testing
 {
+  //this is bad. don't try to emulate
   public class XMLPopulationTest
   {
         FileAdapter fileAdapter = new FileAdapter();

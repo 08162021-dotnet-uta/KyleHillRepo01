@@ -1,0 +1,20 @@
+2021-09-01 16:40:13.702 -04:00 [INF] method: Run()
+2021-09-01 16:40:13.852 -04:00 [INF] Instantiate customer singleton
+2021-09-01 16:40:14.406 -04:00 [INF] Instantiate product singleton
+2021-09-01 16:42:04.923 -04:00 [INF] method: Run()
+2021-09-01 16:42:05.074 -04:00 [INF] Instantiate customer singleton
+2021-09-01 16:42:05.692 -04:00 [INF] Instantiate product singleton
+2021-09-01 16:42:07.735 -04:00 [INF] Loading customer list into XML file
+2021-09-01 16:42:07.735 -04:00 [INF] Loading customers to file
+2021-09-01 16:42:07.750 -04:00 [INF] Loading stores to file
+2021-09-01 16:42:07.764 -04:00 [INF] User chooses whether they are customer or location
+2021-09-01 16:42:41.017 -04:00 [INF] method: Capture()
+2021-09-01 16:42:41.018 -04:00 [INF] method: Output<Project0.StoreApplication.Domain.Models.Customer>()
+2021-09-01 16:42:42.777 -04:00 [INF] Customer choosing between place order and view past orders
+2021-09-01 16:42:47.336 -04:00 [INF] bob viewed past orders
+2021-09-01 16:42:47.337 -04:00 [INF] Customer choosing between place order and view past orders
+2021-09-01 16:43:39.192 -04:00 [INF] method: Capture()
+2021-09-01 16:43:39.193 -04:00 [INF] method: Output<Project0.StoreApplication.Domain.Models.Store>()
+2021-09-01 16:43:40.993 -04:00 [INF] Customer manipulating their cart
+2021-09-01 16:43:46.463 -04:00 [INF] Customer placed order
+2021-09-01 16:43:46.500 -04:00 [INF] Customer choosing between place order and view past orders

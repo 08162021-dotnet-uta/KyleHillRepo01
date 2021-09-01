@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfOrder xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Order>
+    <OrderID>0</OrderID>
+    <Products>
+      <Product>
+        <ProductID>1</ProductID>
+        <Name>cheese pizza</Name>
+        <Price>10.9900</Price>
+      </Product>
+    </Products>
+    <Store>
+      <StoreID>0</StoreID>
+      <Name>Amherst</Name>
+      <Orders />
+    </Store>
+    <Customer>
+      <CustomerID>0</CustomerID>
+      <Name>bob</Name>
+      <Orders />
+    </Customer>
+    <TotalCost>10.99</TotalCost>
+    <Date>2021-09-01T16:43:46.4644569-04:00</Date>
+  </Order>
+</ArrayOfOrder>

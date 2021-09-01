@@ -10,15 +10,15 @@ namespace Project0.StoreApplication.Storage.Repositories
   /// </summary>
   public class CustomerRepository 
   {
-    private const string _path = @"data/Customers.xml";
-    private static readonly FileAdapter _fileAdapter = new FileAdapter();
+    //private const string _path = @"data/Customers.xml";
+    //private static readonly FileAdapter _fileAdapter = new FileAdapter();
 
     public CustomerRepository()
     {
-      if (_fileAdapter.ReadFromFile<Customer>(_path) == null)
-      {
-        _fileAdapter.WriteToFile<Customer>(_path, new List<Customer>());
-      }
+      // if (_fileAdapter.ReadFromFile<Customer>(_path) == null)
+      // {
+      //   _fileAdapter.WriteToFile<Customer>(_path, new List<Customer>());
+      // }
     }
 
     /// <summary>
@@ -27,7 +27,7 @@ namespace Project0.StoreApplication.Storage.Repositories
     /// <returns></returns>
     public bool Insert(List<Customer> entries)
     {
-      _fileAdapter.WriteToFile<Customer>(_path, entries);
+      //_fileAdapter.WriteToFile<Customer>(_path, entries);
 
       return true;
     }
@@ -38,7 +38,8 @@ namespace Project0.StoreApplication.Storage.Repositories
     /// <returns></returns>
     public List<Customer> Select()
     {
-      return _fileAdapter.ReadFromFile<Customer>(_path);
+      //return _fileAdapter.ReadFromFile<Customer>(_path);
+      
     }
   }
 }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfStore xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Store>
+    <StoreID>0</StoreID>
+    <Name>Amherst</Name>
+  </Store>
+  <Store>
+    <StoreID>0</StoreID>
+    <Name>Elyria</Name>
+  </Store>
+  <Store>
+    <StoreID>0</StoreID>
+    <Name>Wellington</Name>
+  </Store>
+</ArrayOfStore>

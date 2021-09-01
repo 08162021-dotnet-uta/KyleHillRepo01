@@ -4,6 +4,8 @@ using Project0.StoreApplication.Client.Singletons;
 using Project0.StoreApplication.Domain.Models;
 using Serilog;
 using Project0.StoreApplication.Client.UserViews;
+using Project0.StoreApplication.Storage.Adapters;
+using Microsoft.EntityFrameworkCore;
 
 namespace Project0.StoreApplication.Client
 {
@@ -25,8 +27,10 @@ namespace Project0.StoreApplication.Client
     /// <param name="args"></param>
     private static void Main(string[] args)
     { 
+      DataAdapter _dataAdapter = new DataAdapter();
       Log.Logger = new LoggerConfiguration().WriteTo.File(_logFilePath).CreateLogger();
-      Run();
+      //Run();
+      //_dataAdapter.Database.ExecuteSqlRaw("insert into [Store].Product values ('chicken poppers',3.99,1)");
       
        
 
