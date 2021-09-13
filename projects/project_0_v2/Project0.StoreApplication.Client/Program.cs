@@ -6,6 +6,7 @@ using Serilog;
 using Project0.StoreApplication.Client.UserViews;
 using Project0.StoreApplication.Storage.Adapters;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Project0.StoreApplication.Client
 {
@@ -29,12 +30,15 @@ namespace Project0.StoreApplication.Client
     { 
       DataAdapter _dataAdapter = new DataAdapter();
       Log.Logger = new LoggerConfiguration().WriteTo.File(_logFilePath).CreateLogger();
-      //Run();
-      //_dataAdapter.Database.ExecuteSqlRaw("insert into [Store].Product values ('chicken poppers',3.99,1)");
-      
-       
+            //Run();
+            //_dataAdapter.Database.ExecuteSqlRaw("insert into [Store].Product values ('chicken poppers',3.99,1)");
 
-        }
+            Customer customer = _dataAdapter.Customer.First();
+            //.OrderBy(b => b.CustomerId)
+            //.First();   
+            //Customer customer = _dataAdapter.Customers.FromSqlRaw("select * from Customer.Customer where CustomerID = 4").First();
+        int cat = 9;
+    }
 
     /// <summary>
     /// 

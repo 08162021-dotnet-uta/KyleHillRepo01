@@ -10,7 +10,7 @@ namespace Project0.StoreApplication.Domain.Models
   {
     public byte StoreID {get;set;}
     public string Name { get; set; }
-    public List<Order> Orders { get; set; }
+    public List<Order> Orders { get; } = new List<Order>();
 
     public Store()
     {

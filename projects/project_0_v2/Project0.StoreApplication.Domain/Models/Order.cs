@@ -9,7 +9,7 @@ namespace Project0.StoreApplication.Domain.Models
   public class Order
   {
     public byte OrderID {get;set;}
-    public List<Product> Products { get; set; }
+    public List<Product> Products { get;} = new List<Product>();
     public Store Store { get; set; }
     public Customer Customer { get; set; }
     public double TotalCost { get; set; }

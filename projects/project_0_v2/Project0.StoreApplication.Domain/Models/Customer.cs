@@ -6,15 +6,15 @@ namespace Project0.StoreApplication.Domain.Models
   /// <summary>
   /// 
   /// </summary>
+  /// 
   public class Customer
   {
     public byte CustomerID {get;set;}
     public string Name { get; set; }
-    public List<Order> Orders { get; set; }
+    public List<Order> Orders { get; } = new List<Order>();
+    //public List<Post> Posts { get; } = new List<Post>();
 
-    public Customer()
-    {
-    }
+   
 
     /// <summary>
     /// 

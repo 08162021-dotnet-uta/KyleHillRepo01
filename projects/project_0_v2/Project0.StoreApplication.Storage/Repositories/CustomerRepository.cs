@@ -39,6 +39,7 @@ namespace Project0.StoreApplication.Storage.Repositories
     public List<Customer> Select()
     {
       //return _fileAdapter.ReadFromFile<Customer>(_path);
+      return new List<Customer>();
       
     }
   }

@@ -113,7 +113,7 @@ namespace Project0.StoreApplication.Client.UserViews
         {
             Log.Information("Customer placed order");
             Order order = new Order();
-            order.Products = Cart;
+            //order.Products = Cart;
             order.Customer = customer;
             order.Store = store;
             order.TotalCost = totalCost;
