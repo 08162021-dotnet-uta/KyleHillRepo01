@@ -15,10 +15,14 @@ function _displayItems(data)
         let button1 = button.cloneNode(false);
         button1.innerText = `${item.cityName}`;
         //button1.addEventListener("click", menuAndCart(item.id))
-        button1.setAttribute('onclick', `menuAndCart(${item.id})`);
+        button1.setAttribute('onclick', `branchToNextPage(${item.id})`);
         listItem1.appendChild(button1)
         locationList.appendChild(listItem1)
     })
 }
 
-function menuAndCart(locationId) { sessionStorage.setItem('LocationID', locationId); window.location = "menu_and_cart.html"; }
+function branchToNextPage(locationId) {
+    sessionStorage.setItem('LocationID', locationId);
+    if (sessionStorage.getItem('chooseLocationReason') === 'view past orders'){ sessionStorage.setItem('idType', 'location'); window.location = "view_past_orders.html"; }
+    else window.location = "menu_and_cart.html";
+}

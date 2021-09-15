@@ -7,7 +7,7 @@
 </head>
 <body style="background-color: black;color: white">
 
-    <p>To login, enter your first and last name.</p>
+    <p id="userPrompt"></p>
     <form action="javascript:void(0);" onsubmit="confirmExists()">
         <label for="add-first-name">First name:</label>
         <input type="text" id="add-first-name"><br><br>
@@ -15,7 +15,7 @@
         <input type="text" id="add-last-name"><br><br>
         <input type="submit" value="Submit">
     </form>
-    <p id="customerNotFoundText" style="display:none">We didn't find you in our system. Try again.</p>
+    <p id="failure_notice"></p>
     <script src="../js/returning_customer.js"></script>
 </body>
 </html>

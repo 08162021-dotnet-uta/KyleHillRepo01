@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Project1.StoreApplication.Models;
+using Project1.StoreApplication.Domain.Models;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 
-namespace Project1.StoreApplication.Controllers
+namespace Project1.StoreApplication.Business.Controllers
 {
     [Route("html/api/[controller]")]
     [ApiController]

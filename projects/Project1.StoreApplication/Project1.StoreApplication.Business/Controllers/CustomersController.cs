@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Project1.StoreApplication.Models;
+using Project1.StoreApplication.Domain.Models;
 
-namespace Project1.StoreApplication.Controllers
+namespace Project1.StoreApplication.Business.Controllers
 {
     [Route("html/api/[controller]")]
     [ApiController]
@@ -46,6 +46,7 @@ namespace Project1.StoreApplication.Controllers
         [HttpGet("firstName={firstName}&lastName={lastName}")]
         public async Task<ActionResult<int>> ConfirmCustomerExists(string firstName, string lastName)
         {
+            if (!Customer.isValidName(firstName, lastName)) return -2;
             var customer = _context.Customers.FromSqlRaw<Customer>($"select * from Customers where FirstName = '{firstName}' and LastName = '{lastName}'").ToList();
             
             if (customer.Count == 1) return customer[0].Id;
@@ -86,13 +87,13 @@ namespace Project1.StoreApplication.Controllers
         // POST: api/Customers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Customer>> PostCustomer(Customer customer)
+        public void PostCustomer(Customer customer)
         {
-            _context.Customers.Add(customer);
-            await _context.SaveChangesAsync();
+            _context.Database.ExecuteSqlRaw($"insert into Customers (FirstName,LastName) values ('{customer.FirstName}','{customer.LastName}')");
+            _context.SaveChanges();
 
             //return CreatedAtAction("GetCustomer", new { id = customer.Id }, customer);
-            return CreatedAtAction(nameof(GetCustomer), new { id = customer.Id }, customer);
+            //return CreatedAtAction(nameof(GetCustomer), new { id = customer.Id }, customer);
         }
 
         // DELETE: api/Customers/5

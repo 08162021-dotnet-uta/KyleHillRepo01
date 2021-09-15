@@ -6,17 +6,26 @@
     <!--<link rel="stylesheet" href="../css/site.css" />-->
 </head>
 <body style="background-color:black">
-    <table id="table1" border="1" style="background-color: black; color: white; border-color: white;" >
+    <table id="menu" border="1" style="background-color: black; color: white; border-color: white;" >
         <tr >
             <th>Name</th>
             <th>Description</th>
             <th>Price</th>
-            <th>Quantity</th>
+            <th>Add / Remove</th>
             <th>Stock</th>
         </tr>
-        <tbody id="tableBody"></tbody>
+        <tbody id="menuBody"></tbody>
     </table>
     <button onclick="formatOrderIntoObject()">Submit order</button>
+    <br>
+    <table id="cart" border="1" style="background-color: black; color: white; border-color: white; display: none">
+        <tr>
+            <th>Name</th>
+            <th>Quantity</th>
+        </tr>
+        <tbody id="cartBody"></tbody>
+    </table>
+    <p id="totalPrice" style="color:white"></p>
     <script src="../js/menu_and_cart.js"></script>
 </body>
 </html>

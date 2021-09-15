@@ -1,6 +1,6 @@
 using System;
 
-namespace Project1.StoreApplication
+namespace Project1.StoreApplication.Business
 {
     public class WeatherForecast
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Project1.StoreApplication.ViewModels
+namespace Project1.StoreApplication.Domain.ViewModels
 {
     public class OrderItemView
     {
@@ -12,6 +12,7 @@ namespace Project1.StoreApplication.ViewModels
         public int ProductId { get; set; }
         public string Name1 { get; set; }
         public decimal ProductPrice { get; set; }
+        public int Quantity { get; set; }
 
     }
 }

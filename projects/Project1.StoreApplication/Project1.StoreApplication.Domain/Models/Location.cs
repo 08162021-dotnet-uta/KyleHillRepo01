@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace Project1.StoreApplication.Models
+namespace Project1.StoreApplication.Domain.Models
 {
     public partial class Location
     {

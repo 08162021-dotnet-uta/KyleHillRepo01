@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace Project1.StoreApplication.Models
+namespace Project1.StoreApplication.Domain.Models
 {
     public partial class Order
     {
@@ -22,4 +22,6 @@ namespace Project1.StoreApplication.Models
         public virtual Location Location { get; set; }
         public virtual ICollection<OrderItem> OrderItems { get; set; }
     }
+
+    
 }

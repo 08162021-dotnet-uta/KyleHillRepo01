@@ -12,7 +12,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Project1.StoreApplication.Models;
+using Project1.StoreApplication.Domain.Models;
+using Project1.StoreApplication.Business.Controllers;
 
 namespace Project1.StoreApplication
 {
@@ -29,8 +30,10 @@ namespace Project1.StoreApplication
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers();
+            services.AddControllers()
+                    .AddApplicationPart(typeof(CustomersController).Assembly);
             services.AddDbContext<Kyles_Pizza_ShopContext>();
+                
             
             //services.AddSwaggerGen(c =>
             //{
@@ -48,6 +51,7 @@ namespace Project1.StoreApplication
                 //app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Project1.StoreApplication v1"));
             }
 
+            app.UseStatusCodePages();
             app.UseDefaultFiles();
             app.UseStaticFiles();
 

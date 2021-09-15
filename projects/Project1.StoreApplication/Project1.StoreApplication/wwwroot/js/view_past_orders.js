@@ -1,6 +1,10 @@
 ﻿const uri = 'api/orders'
-let id = sessionStorage.getItem('CustomerID')
-fetch(`${uri}/userType=customer&id=${id}`)
+let idType = sessionStorage.getItem('idType')
+let id = 0
+if (idType === 'location') id = sessionStorage.getItem('LocationID')
+else id = sessionStorage.getItem('CustomerID')
+
+fetch(`${uri}/idType=${idType}&id=${id}`)
     .then(response => response.json())
     .then(data => _displayOrders(data))
 
