@@ -11,7 +11,7 @@ namespace Project1.StoreApplication.Domain.Models
         {
             OrderItems = new HashSet<OrderItem>();
         }
-
+        public const string cartOrderDate = "1985-01-01";
         public Guid Id { get; set; }
         public DateTime OrderDate { get; set; }
         public int CustomerId { get; set; }

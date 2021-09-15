@@ -17,12 +17,17 @@ function confirmExists() {
     })
         .then(response => response.json())
         .then(data => {
-            if (data >= 0 && userType === 'returning') { sessionStorage.setItem('CustomerID', data); window.location = "customer_home_page.html"; }
+            if (data >= 0 && userType === 'returning') { sessionStorage.setItem('CustomerID', data); clearInputs(); window.location = "customer_home_page.html"; }
             if (data >= 0 && userType === 'new') failureNotice.innerHTML = "That name has already been taken."
-            if (data === -1 && userType === 'new') { addCustomer(firstName, lastName); sessionStorage.setItem('newOrReturning', 'returning'); window.location = "customer_home_page.html" }
+            if (data === -1 && userType === 'new') { addCustomer(firstName, lastName); sessionStorage.setItem('newOrReturning', 'returning'); clearInputs(); window.location = "customer_home_page.html" }
             if (data === -1 && userType === 'returning') failureNotice.innerHTML = "We couldn't find you in the system."
             if (data === -2) failureNotice.innerHTML = "Each name can have a max of 50 charactes."
         });
+}
+
+function clearInputs() {
+    document.getElementById('add-first-name').value="";
+    document.getElementById('add-last-name').value="";
 }
 
 function addCustomer(firstName,lastName) {

@@ -1,4 +1,17 @@
 ﻿let orderId = 0
+
+if (performance.navigation.type == performance.navigation.TYPE_RELOAD) fetch(`api/orders/`, {method: 'DELETE'})
+ 
+document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'hidden')
+        if (orderId !== 0) {
+            fetch(`api/orders/${orderId}`, {
+                method: 'DELETE'
+            })
+            document.getElementById("totalPrice").style.display = "none"; document.getElementById("cart").style.display = "none";
+            orderId = 0
+        }
+})
 //to manage the cart we need the orderID, the chosen product, and chosen action
 
 fetch('api/products')
@@ -102,7 +115,7 @@ function orderUpdate(productId, action) {
 
 function displayCart(data) {
 
-    if (data.itemAdded === false) window.alert(data.message)
+    if (data.actionSucceeded === false) window.alert(data.message)
     let totalPrice = document.getElementById("totalPrice")
     //handles case of failing to add to an empty cart
     if (data.orderItems.length === 0) { totalPrice.style.display = "none"; document.getElementById("cart").style.display = "none"; return }
@@ -126,45 +139,22 @@ function displayCart(data) {
 
     })
 }
-    //let order1 = { LocationId: sessionStorage.getItem('LocationID'), CustomerId: sessionStorage.getItem('CustomerID'), orderItems: [], TotalPrice: 0 }
-    //const table = document.getElementById('table1');
-    //let i = 1;
-    //while (i < table.rows.length) {
-    //    let quantity = table.rows[i].cells[3].firstChild.value
-    //    if (quantity > 0) {
-    //        if (quantity > table.rows[i].cells[5].innerHTML) { console.log("No pizza for you"); return }
-    //        else {
-    //            let j = 1
-    //            while (j <= quantity) {
-    //                let orderItem = makeOrderItem(table.rows[i].cells[4].innerHTML);
-    //                order1.orderItems.push(orderItem)
-    //                j++
-    //                console.log(table.rows[i].cells[2].innerHTML)
-    //                order1.TotalPrice += parseFloat(table.rows[i].cells[2].innerHTML)
-    //            }
-    //        }
-    //    }
-    //    i++
-    //}
-    //submitOrder(order1)
+    
 
 
-function submitOrder(orderObject) {
-    fetch('api/orders', {
-        method: 'POST',
+function submitOrder() {
+    if (orderId === 0) { window.alert("Your cart is empty."); return }
+    let order = { OrderId: orderId }
+    fetch('api/orders/submitOrder', {
+        method: 'PUT',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(orderObject)
+        body: JSON.stringify(order)
     })
-        //.then(response => response.json())
-        //.then(() => {
-        //    getItems();
-        //    addFirstNameTextbox.value = '';
-        //    addLastNameTextbox.value = '';
-        //})
-        //.catch(error => console.error('Unable to add item.', error));
+    window.alert("Your order had been placed!")
+    window.location = "customer_home_page.html"      
 }
 
 
@@ -172,4 +162,3 @@ function submitOrder(orderObject) {
    
 
 
-function makeOrderItem(ProductId) { return { ProductId }; }

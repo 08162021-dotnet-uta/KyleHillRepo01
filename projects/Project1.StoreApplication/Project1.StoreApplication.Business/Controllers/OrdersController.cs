@@ -36,8 +36,8 @@ namespace Project1.StoreApplication.Business.Controllers
             List<OrderView> orderViews = new List<OrderView>();
             List<OrderItemView> orderItemViews = new List<OrderItemView>();
             FormattableString orderQuery;
-            if (idType.Equals("customer")) orderQuery = $"select * from Orders where CustomerID = {id} order by OrderDate";
-            else orderQuery = $"select * from Orders where LocationID = {id} order by OrderDate";
+            if (idType.Equals("customer")) orderQuery = $"select * from Orders where CustomerID = {id} and OrderDate > {Order.cartOrderDate}  order by OrderDate";
+            else orderQuery = $"select * from Orders where LocationID = {id} and OrderDate > {Order.cartOrderDate} order by OrderDate";
 
             //List<int> locationIdList = new List<int>();
             orders = _context.Orders.FromSqlRaw<Order>(orderQuery.ToString()).ToList();
@@ -116,7 +116,17 @@ namespace Project1.StoreApplication.Business.Controllers
             return order;
         }
 
-        // PUT: api/Orders/5
+
+
+        [HttpPut("submitOrder")]
+        public void submitOrder(OrderInput order)
+        {
+            _context.Database.ExecuteSqlRaw($"update Orders set OrderDate = getdate() where Id = '{order.OrderId}'");
+            _context.SaveChanges();
+        }
+
+
+// PUT: api/Orders/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut]
         public OrderView PutOrder(OrderInput order)
@@ -135,7 +145,6 @@ namespace Project1.StoreApplication.Business.Controllers
 
                 OrderView orderView = new OrderView()
                 {
-                    Id = order.OrderId,
                     TotalPrice = totalPrice,
                     OrderItems = OrderView.GetOrderItemViews(order.OrderId),
                     actionSucceeded = true
@@ -148,13 +157,12 @@ namespace Project1.StoreApplication.Business.Controllers
                 Product product = _context.Products.FromSqlRaw<Product>($"select * from Products where Id = {order.ProductId}").First();
                 decimal totalPrice = orderOfInterest.TotalPrice - product.ProductPrice;
                 _context.Database.ExecuteSqlRaw($"update Orders set TotalPrice = {totalPrice} where Id = '{order.OrderId}'");
-                _context.Database.ExecuteSqlRaw($"delete top 1 from OrderItems where OrderId = '{order.OrderId}' and ProductId = {product.Id}");
+                _context.Database.ExecuteSqlRaw($"delete top (1) from OrderItems where OrderId = '{order.OrderId}' and ProductId = {product.Id}");
                 _context.Database.ExecuteSqlRaw($"update LocationInventory set Stock = Stock + 1 where ProductId = {product.Id} and LocationId = {orderOfInterest.LocationId}");
                 _context.SaveChanges();
 
                 OrderView orderView = new OrderView()
                 {
-                    Id = order.OrderId,
                     TotalPrice = totalPrice,
                     OrderItems = OrderView.GetOrderItemViews(order.OrderId),
                     actionSucceeded = true
@@ -167,6 +175,7 @@ namespace Project1.StoreApplication.Business.Controllers
                 OrderView orderView = new OrderView();
                 orderView.actionSucceeded = false;
                 orderView.TotalPrice = orderOfInterest.TotalPrice;
+                orderView.OrderItems = OrderView.GetOrderItemViews(order.OrderId);
                 if (order.Action.Equals("remove")) orderView.message = "Can't remove an item you don't have in your cart.";
                 else orderView.message = "That item is out of stock.";
                 return orderView;
@@ -183,7 +192,7 @@ namespace Project1.StoreApplication.Business.Controllers
             {
                 Guid orderID = Guid.NewGuid();
                 Product product = _context.Products.FromSqlRaw<Product>($"select * from Products where Id = {order.ProductId}").First();
-                _context.Database.ExecuteSqlRaw($"insert into Orders values ('{orderID}','1985-01-01',{order.CustomerId},{order.LocationId},{product.ProductPrice})");
+                _context.Database.ExecuteSqlRaw($"insert into Orders values ('{orderID}','{Order.cartOrderDate}',{order.CustomerId},{order.LocationId},{product.ProductPrice})");
                 _context.Database.ExecuteSqlRaw($"insert into OrderItems (OrderId,ProductId) values ('{orderID}',{product.Id})");
                 _context.Database.ExecuteSqlRaw($"update LocationInventory set Stock = Stock - 1 where ProductId = {product.Id} and LocationId = {order.LocationId}");
                 _context.SaveChanges();
@@ -240,18 +249,17 @@ namespace Project1.StoreApplication.Business.Controllers
 
         // DELETE: api/Orders/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteOrder(Guid id)
+        public void DeleteOrder(Guid id)
         {
-            var order = await _context.Orders.FindAsync(id);
-            if (order == null)
-            {
-                return NotFound();
-            }
+            _context.Database.ExecuteSqlRaw($"delete from Orders where Id = '{id}'");
+            _context.SaveChanges();
+        }
 
-            _context.Orders.Remove(order);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+        [HttpDelete]
+        public void DeleteOrder()
+        {
+            _context.Database.ExecuteSqlRaw($"delete from Orders where OrderDate = '{Order.cartOrderDate}'");
+            _context.SaveChanges();
         }
 
         private bool OrderExists(Guid id)
