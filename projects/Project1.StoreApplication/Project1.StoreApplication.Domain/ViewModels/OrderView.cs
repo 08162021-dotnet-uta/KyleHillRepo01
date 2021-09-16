@@ -10,7 +10,7 @@ namespace Project1.StoreApplication.Domain.ViewModels
     {
         public OrderView()
         {
-            //OrderItems = GetOrderItemViews();
+            OrderItems = new HashSet<OrderItemView>();
         }
         public Guid Id { get; set; }
         public DateTime OrderDate { get; set; }
@@ -20,7 +20,7 @@ namespace Project1.StoreApplication.Domain.ViewModels
         public string LocationName { get; set; }
         public decimal TotalPrice { get; set; }
         public Boolean actionSucceeded { get; set; }
-        public List<OrderItemView> OrderItems { get; set; }
+        public virtual ICollection<OrderItemView> OrderItems { get; set; }
         public string message { get; set; }
 
         public static List<OrderItemView> GetOrderItemViews(Guid orderId) 

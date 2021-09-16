@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Project1.StoreApplication.Domain.Interfaces;
 using Project1.StoreApplication.Domain.Models;
 
 namespace Project1.StoreApplication.Business.Controllers
@@ -13,95 +14,95 @@ namespace Project1.StoreApplication.Business.Controllers
     [ApiController]
     public class LocationsController : ControllerBase
     {
-        private readonly Kyles_Pizza_ShopContext _context;
+        private readonly ILocationRepository _locationRepo;
 
-        public LocationsController(Kyles_Pizza_ShopContext context)
+        public LocationsController(ILocationRepository locationRepo)
         {
-            _context = context;
+            _locationRepo = locationRepo;
         }
 
         // GET: api/Locations
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Location>>> GetLocations()
+        public IEnumerable<Location> GetLocations()
         {
-            return _context.Locations.FromSqlRaw<Location>("select * from Locations").ToList();
+            return _locationRepo.GetLocations();
         }
 
         // GET: api/Locations/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Location>> GetLocation(int id)
-        {
-            var location = await _context.Locations.FindAsync(id);
+        //[HttpGet("{id}")]
+        //public async Task<ActionResult<Location>> GetLocation(int id)
+        //{
+        //    var location = await _context.Locations.FindAsync(id);
 
-            if (location == null)
-            {
-                return NotFound();
-            }
+        //    if (location == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return location;
-        }
+        //    return location;
+        //}
 
-        // PUT: api/Locations/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutLocation(int id, Location location)
-        {
-            if (id != location.Id)
-            {
-                return BadRequest();
-            }
+        //// PUT: api/Locations/5
+        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> PutLocation(int id, Location location)
+        //{
+        //    if (id != location.Id)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            _context.Entry(location).State = EntityState.Modified;
+        //    _context.Entry(location).State = EntityState.Modified;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!LocationExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!LocationExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
-        // POST: api/Locations
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Location>> PostLocation(Location location)
-        {
-            _context.Locations.Add(location);
-            await _context.SaveChangesAsync();
+        //// POST: api/Locations
+        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //[HttpPost]
+        //public async Task<ActionResult<Location>> PostLocation(Location location)
+        //{
+        //    _context.Locations.Add(location);
+        //    await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetLocation", new { id = location.Id }, location);
-        }
+        //    return CreatedAtAction("GetLocation", new { id = location.Id }, location);
+        //}
 
-        // DELETE: api/Locations/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteLocation(int id)
-        {
-            var location = await _context.Locations.FindAsync(id);
-            if (location == null)
-            {
-                return NotFound();
-            }
+        //// DELETE: api/Locations/5
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> DeleteLocation(int id)
+        //{
+        //    var location = await _context.Locations.FindAsync(id);
+        //    if (location == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            _context.Locations.Remove(location);
-            await _context.SaveChangesAsync();
+        //    _context.Locations.Remove(location);
+        //    await _context.SaveChangesAsync();
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
-        private bool LocationExists(int id)
-        {
-            return _context.Locations.Any(e => e.Id == id);
-        }
+        //private bool LocationExists(int id)
+        //{
+        //    return _context.Locations.Any(e => e.Id == id);
+        //}
     }
 }

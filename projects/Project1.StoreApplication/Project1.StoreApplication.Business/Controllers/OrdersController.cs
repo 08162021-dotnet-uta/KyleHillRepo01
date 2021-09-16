@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Project1.StoreApplication.Domain.Models;
 using Project1.StoreApplication.Domain.ViewModels;
 using Project1.StoreApplication.Domain.InputModels;
+using Project1.StoreApplication.Domain.Interfaces;
 
 namespace Project1.StoreApplication.Business.Controllers
 {
@@ -15,11 +16,11 @@ namespace Project1.StoreApplication.Business.Controllers
     [ApiController]
     public class OrdersController : ControllerBase
     {
-        private readonly Kyles_Pizza_ShopContext _context;
+        private readonly IOrderItemRepository _orderItemRepository;
 
-        public OrdersController(Kyles_Pizza_ShopContext context)
+        public OrdersController(IOrderItemRepository orderItemRepository)
         {
-            _context = context;
+            _orderItemRepository = orderItemRepository;
         }
 
         //method is async because copy pasted the template
@@ -36,11 +37,13 @@ namespace Project1.StoreApplication.Business.Controllers
             List<OrderView> orderViews = new List<OrderView>();
             List<OrderItemView> orderItemViews = new List<OrderItemView>();
             FormattableString orderQuery;
-            if (idType.Equals("customer")) orderQuery = $"select * from Orders where CustomerID = {id} and OrderDate > {Order.cartOrderDate}  order by OrderDate";
+            if (idType.Equals("customer")) orderQuery = $"select * from Orders where CustomerID = {id} and OrderDate > '{Order.cartOrderDate}'  order by OrderDate";
             else orderQuery = $"select * from Orders where LocationID = {id} and OrderDate > {Order.cartOrderDate} order by OrderDate";
 
-            //List<int> locationIdList = new List<int>();
+            
             orders = _context.Orders.FromSqlRaw<Order>(orderQuery.ToString()).ToList();
+            #region
+            //List<int> locationIdList = new List<int>();
             //foreach (Order order in orders)
             //{ 
             //    if (!locationIdList.Contains(order.LocationId))
@@ -53,7 +56,8 @@ namespace Project1.StoreApplication.Business.Controllers
             //customers = _context.Customers.FromSqlRaw<Customer>($"select * from Customers where Id = {id}").ToList();
             //locations = _context.Locations.FromSqlRaw<Location>($"select * from Locations where Id in ({locationIdListString})").ToList();
             //products = _context.Products.FromSqlRaw<Product>($"select * from Products").ToList();
-            orderItems = _context.OrderItems.FromSqlRaw<OrderItem>($"select * from OrderItems").ToList();
+            #endregion
+            orderItems = _orderItemRepository.GetAllOrderItems();
             customers = _context.Customers.FromSqlRaw<Customer>($"select * from Customers").ToList();
             locations = _context.Locations.FromSqlRaw<Location>($"select * from Locations").ToList();
             products = _context.Products.FromSqlRaw<Product>($"select * from Products").ToList();
@@ -103,18 +107,18 @@ namespace Project1.StoreApplication.Business.Controllers
         }
 
         // GET: api/Orders/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Order>> GetOrder(Guid id)
-        {
-            var order = await _context.Orders.FindAsync(id);
+        //[HttpGet("{id}")]
+        //public async Task<ActionResult<Order>> GetOrder(Guid id)
+        //{
+        //    var order = await _context.Orders.FindAsync(id);
 
-            if (order == null)
-            {
-                return NotFound();
-            }
+        //    if (order == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return order;
-        }
+        //    return order;
+        //}
 
 
 
@@ -214,6 +218,7 @@ namespace Project1.StoreApplication.Business.Controllers
                 else orderView.message = "That item is out of stock.";
                 return orderView;
             }
+            #region
             //_context.Database.ExecuteSqlRaw($"insert into Orders values ('{orderID}',getdate(),{order.CustomerId},{order.LocationId},{order.TotalPrice})");
             //string orderItemsInsert = $"insert into OrderItems (OrderId,ProductId) values ";
             //string locationInventoryUpdate = "";
@@ -245,6 +250,7 @@ namespace Project1.StoreApplication.Business.Controllers
             //        throw;
             //    }
             //}
+            #endregion
         }
 
         // DELETE: api/Orders/5
@@ -262,10 +268,10 @@ namespace Project1.StoreApplication.Business.Controllers
             _context.SaveChanges();
         }
 
-        private bool OrderExists(Guid id)
-        {
-            return _context.Orders.Any(e => e.Id == id);
-        }
+        //private bool OrderExists(Guid id)
+        //{
+        //    return _context.Orders.Any(e => e.Id == id);
+        //}
 
         public Boolean itemIsInCart(Guid orderId, int productId) 
         {

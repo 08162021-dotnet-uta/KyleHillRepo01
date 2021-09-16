@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Project1.StoreApplication.Domain.Models;
 using Project1.StoreApplication.Business.Controllers;
+using Project1.StoreApplication.Domain.Interfaces;
+using Project1.StoreApplication.Storage;
 
 namespace Project1.StoreApplication
 {
@@ -30,11 +32,17 @@ namespace Project1.StoreApplication
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers()
-                    .AddApplicationPart(typeof(CustomersController).Assembly);
+            services.AddControllers();
+                    //.AddApplicationPart(typeof(CustomersController).Assembly);
             services.AddDbContext<Kyles_Pizza_ShopContext>();
-                
-            
+
+            //registering classes with the DI system.
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<ILocationRepository, LocationRepository>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
+            services.AddScoped<IOrderItemRepository, OrderItemRepository>();
+
+
             //services.AddSwaggerGen(c =>
             //{
             //    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Project1.StoreApplication", Version = "v1" });
