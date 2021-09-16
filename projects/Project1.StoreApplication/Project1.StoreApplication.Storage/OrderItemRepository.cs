@@ -18,5 +18,19 @@ namespace Project1.StoreApplication.Storage
         {
             return _context.OrderItems.FromSqlRaw<OrderItem>($"select * from OrderItems").ToList();
         }
+        public void InsertOrderItem(Guid orderId, int productId)
+        {
+            _context.Database.ExecuteSqlRaw($"insert into OrderItems (OrderId,ProductId) values ('{orderId}',{productId})");
+            _context.SaveChanges();
+        }
+        public void Delete(Guid orderId, int productId)
+        { _context.Database.ExecuteSqlRaw($"delete top (1) from OrderItems where OrderId = '{orderId}' and ProductId = {productId}");
+            _context.SaveChanges();
+        }
+
+        public List<OrderItem> GetAllInstancesOfParticularProductTypeInAnOrder(Guid orderId, int productId)
+        { return _context.OrderItems.FromSqlRaw<OrderItem>($"select * from OrderItems where OrderId = '{orderId}' and ProductId = {productId}").ToList(); }
+
+
     }
 }

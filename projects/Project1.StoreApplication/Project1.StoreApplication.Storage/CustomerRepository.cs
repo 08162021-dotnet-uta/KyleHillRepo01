@@ -25,5 +25,9 @@ namespace Project1.StoreApplication.Storage
             _context.Database.ExecuteSqlRaw($"insert into Customers (FirstName,LastName) values ('{customer.FirstName}','{customer.LastName}')");
             _context.SaveChanges();
         }
+        public List<Customer> GetAll()
+        { 
+            return _context.Customers.FromSqlRaw<Customer>($"select * from Customers").ToList();
+        }
     }
 }

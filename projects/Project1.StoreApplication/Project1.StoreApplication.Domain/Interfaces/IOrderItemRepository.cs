@@ -10,5 +10,9 @@ namespace Project1.StoreApplication.Domain.Interfaces
     public interface IOrderItemRepository
     {
         List<OrderItem> GetAllOrderItems();
+        void InsertOrderItem(Guid orderId, int productId);
+        void Delete(Guid orderId, int productId);
+        List<OrderItem> GetAllInstancesOfParticularProductTypeInAnOrder(Guid orderId, int productId);
+
     }
 }

@@ -16,7 +16,7 @@ namespace Project1.StoreApplication.Storage
         public LocationRepository(Kyles_Pizza_ShopContext context)
         { _context = context; }
 
-        public IEnumerable<Location> GetLocations()
+        public List<Location> GetLocations()
         {
             return _context.Locations.FromSqlRaw<Location>("select * from Locations").ToList();
         }

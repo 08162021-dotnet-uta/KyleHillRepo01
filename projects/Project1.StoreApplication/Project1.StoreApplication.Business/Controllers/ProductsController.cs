@@ -26,7 +26,7 @@ namespace Project1.StoreApplication.Business.Controllers
 
         // GET: api/Products
         [HttpGet]
-        public IEnumerable<Product> GetProducts()
+        public List<Product> GetProducts()
         {
             return _repo.GetProducts();
         }

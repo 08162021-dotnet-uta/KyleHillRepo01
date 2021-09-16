@@ -9,6 +9,6 @@ namespace Project1.StoreApplication.Domain.Interfaces
 {
     public interface ILocationRepository
     {
-        IEnumerable<Location> GetLocations();
+        List<Location> GetLocations();
     }
 }

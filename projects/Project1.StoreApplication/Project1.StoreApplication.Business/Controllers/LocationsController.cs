@@ -23,7 +23,7 @@ namespace Project1.StoreApplication.Business.Controllers
 
         // GET: api/Locations
         [HttpGet]
-        public IEnumerable<Location> GetLocations()
+        public List<Location> GetLocations()
         {
             return _locationRepo.GetLocations();
         }

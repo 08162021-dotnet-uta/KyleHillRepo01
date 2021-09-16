@@ -32,7 +32,7 @@ function clearInputs() {
 
 function addCustomer(firstName,lastName) {
     
-    const customer = {
+    const Customer = {
         FirstName: firstName,
         LastName: lastName
     };
@@ -43,7 +43,7 @@ function addCustomer(firstName,lastName) {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(customer)
+        body: JSON.stringify(Customer)
     })
 }
 

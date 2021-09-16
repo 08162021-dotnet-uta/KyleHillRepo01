@@ -20,6 +20,15 @@ namespace Project1.StoreApplication.Storage
         public IEnumerable<LocationInventory> GetLocationInventory(int LocationId)
         {
             return _context.LocationInventories.FromSqlRaw<LocationInventory>($"select * from LocationInventory where LocationId = {LocationId} order by ProductId").ToList();
-        }    
+        }
+        public void DecreaseItemStockBy1(int productId, int locationId)
+        { _context.Database.ExecuteSqlRaw($"update LocationInventory set Stock = Stock - 1 where ProductId = {productId} and LocationId = {locationId}");
+            _context.SaveChanges();
+        }
+        public void IncreaseItemStockBy1(int productId, int locationId)
+        {
+            _context.Database.ExecuteSqlRaw($"update LocationInventory set Stock = Stock + 1 where ProductId = {productId} and LocationId = {locationId}");
+            _context.SaveChanges();
+        }
 }
 }

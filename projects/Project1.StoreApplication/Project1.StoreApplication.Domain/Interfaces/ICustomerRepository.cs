@@ -11,5 +11,6 @@ namespace Project1.StoreApplication.Domain.Interfaces
     {
         List<Customer> FindCustomer(string firstName, string lastName);
         void AddCustomer(Customer customer);
+        List<Customer> GetAll();
     }
 }

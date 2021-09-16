@@ -9,6 +9,7 @@ namespace Project1.StoreApplication.Domain.Interfaces
 {
     public interface IProductRepository
     {
-        IEnumerable<Product> GetProducts();
+        List<Product> GetProducts();
+        Product GetProduct(int productId);
     }
 }

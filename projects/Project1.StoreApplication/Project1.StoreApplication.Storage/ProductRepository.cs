@@ -16,9 +16,11 @@ namespace Project1.StoreApplication.Storage
         public ProductRepository(Kyles_Pizza_ShopContext context) 
         { _context = context; }
     
-        public IEnumerable<Product> GetProducts()
+        public List<Product> GetProducts()
         {
             return _context.Products.FromSqlRaw<Product>("select * from Products order by Id").ToList();
         }
+        public Product GetProduct(int productId) 
+        {return _context.Products.FromSqlRaw<Product>($"select * from Products where Id = {productId}").First(); }
     }
 }

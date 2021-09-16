@@ -17,16 +17,28 @@ namespace Project1.StoreApplication.Business.Controllers
     public class OrdersController : ControllerBase
     {
         private readonly IOrderItemRepository _orderItemRepository;
+        private readonly IOrderRepository _orderRepository;
+        private readonly ICustomerRepository _customerRepository;
+        private readonly ILocationRepository _locationRepository;
+        private readonly IProductRepository _productRepository;
+        private readonly ILocationInventoryRepository _locationInventoryRepository;
+        
 
-        public OrdersController(IOrderItemRepository orderItemRepository)
+        public OrdersController(IOrderItemRepository orderItemRepository , IOrderRepository orderRepository, ICustomerRepository customerRepository,
+        ILocationRepository locationRepository, IProductRepository productRepository, ILocationInventoryRepository locationInventoryRepository)
         {
             _orderItemRepository = orderItemRepository;
+            _orderRepository = orderRepository;
+            _customerRepository = customerRepository;
+            _locationRepository = locationRepository;
+            _productRepository = productRepository;
+            _locationInventoryRepository = locationInventoryRepository;
         }
 
         //method is async because copy pasted the template
         // GET: api/Customers/userType_and_id
         [HttpGet("idType={idType}&id={id}")]
-        public async Task<ActionResult<IEnumerable<OrderView>>> GetOrders(string idType, int id)
+        public IEnumerable<OrderView> GetOrders(string idType, int id)
         {
             List<Order> orders = new List<Order>();
             List<OrderItem> orderItems = new List<OrderItem>();
@@ -36,12 +48,9 @@ namespace Project1.StoreApplication.Business.Controllers
             List<Product> products = new List<Product>();
             List<OrderView> orderViews = new List<OrderView>();
             List<OrderItemView> orderItemViews = new List<OrderItemView>();
-            FormattableString orderQuery;
-            if (idType.Equals("customer")) orderQuery = $"select * from Orders where CustomerID = {id} and OrderDate > '{Order.cartOrderDate}'  order by OrderDate";
-            else orderQuery = $"select * from Orders where LocationID = {id} and OrderDate > {Order.cartOrderDate} order by OrderDate";
-
-            
-            orders = _context.Orders.FromSqlRaw<Order>(orderQuery.ToString()).ToList();
+           
+            if (idType.Equals("customer")) orders = _orderRepository.AllOrdersForCustomer(id, Order.cartOrderDate);
+            else orders = _orderRepository.AllOrdersForLocation(id, Order.cartOrderDate);
             #region
             //List<int> locationIdList = new List<int>();
             //foreach (Order order in orders)
@@ -58,9 +67,9 @@ namespace Project1.StoreApplication.Business.Controllers
             //products = _context.Products.FromSqlRaw<Product>($"select * from Products").ToList();
             #endregion
             orderItems = _orderItemRepository.GetAllOrderItems();
-            customers = _context.Customers.FromSqlRaw<Customer>($"select * from Customers").ToList();
-            locations = _context.Locations.FromSqlRaw<Location>($"select * from Locations").ToList();
-            products = _context.Products.FromSqlRaw<Product>($"select * from Products").ToList();
+            customers = _customerRepository.GetAll();
+            locations = _locationRepository.GetLocations();
+            products = _productRepository.GetProducts();
 
             foreach (Order order in orders)
             {
@@ -103,7 +112,6 @@ namespace Project1.StoreApplication.Business.Controllers
                         orderView.LocationName = location.CityName; 
             }
             return orderViews;
-            
         }
 
         // GET: api/Orders/5
@@ -125,8 +133,8 @@ namespace Project1.StoreApplication.Business.Controllers
         [HttpPut("submitOrder")]
         public void submitOrder(OrderInput order)
         {
-            _context.Database.ExecuteSqlRaw($"update Orders set OrderDate = getdate() where Id = '{order.OrderId}'");
-            _context.SaveChanges();
+            _orderRepository.SubmitOrder(order.OrderId);
+            
         }
 
 
@@ -135,17 +143,16 @@ namespace Project1.StoreApplication.Business.Controllers
         [HttpPut]
         public OrderView PutOrder(OrderInput order)
         {
-            Order orderOfInterest= _context.Orders.FromSqlRaw<Order>($"select * from Orders where Id = '{order.OrderId}'").First();
+            Order orderOfInterest = _orderRepository.GetParticularOrder(order.OrderId); 
 
             //handles simple add of new orderItem
             if (LocationInventory.itemIsAvailable(orderOfInterest.LocationId, order.ProductId) && order.Action.Equals("add"))
             {
-                Product product = _context.Products.FromSqlRaw<Product>($"select * from Products where Id = {order.ProductId}").First();
+                Product product = _productRepository.GetProduct(order.ProductId);
                 decimal totalPrice = orderOfInterest.TotalPrice + product.ProductPrice;
-                _context.Database.ExecuteSqlRaw($"update Orders set TotalPrice = {totalPrice} where Id = '{order.OrderId}'");
-                _context.Database.ExecuteSqlRaw($"insert into OrderItems (OrderId,ProductId) values ('{order.OrderId}',{product.Id})");
-                _context.Database.ExecuteSqlRaw($"update LocationInventory set Stock = Stock - 1 where ProductId = {product.Id} and LocationId = {orderOfInterest.LocationId}");
-                _context.SaveChanges();
+                _orderRepository.UpdateTotalPrice(order.OrderId, totalPrice);
+                _orderItemRepository.InsertOrderItem(order.OrderId, product.Id);
+                _locationInventoryRepository.DecreaseItemStockBy1(product.Id, orderOfInterest.LocationId);
 
                 OrderView orderView = new OrderView()
                 {
@@ -158,12 +165,11 @@ namespace Project1.StoreApplication.Business.Controllers
             }
             else if (order.Action.Equals("remove") && itemIsInCart(order.OrderId,order.ProductId))
             {
-                Product product = _context.Products.FromSqlRaw<Product>($"select * from Products where Id = {order.ProductId}").First();
+                Product product = _productRepository.GetProduct(order.ProductId);
                 decimal totalPrice = orderOfInterest.TotalPrice - product.ProductPrice;
-                _context.Database.ExecuteSqlRaw($"update Orders set TotalPrice = {totalPrice} where Id = '{order.OrderId}'");
-                _context.Database.ExecuteSqlRaw($"delete top (1) from OrderItems where OrderId = '{order.OrderId}' and ProductId = {product.Id}");
-                _context.Database.ExecuteSqlRaw($"update LocationInventory set Stock = Stock + 1 where ProductId = {product.Id} and LocationId = {orderOfInterest.LocationId}");
-                _context.SaveChanges();
+                _orderRepository.UpdateTotalPrice(order.OrderId, totalPrice);
+                _orderItemRepository.Delete(order.OrderId, product.Id);
+                _locationInventoryRepository.IncreaseItemStockBy1(product.Id, orderOfInterest.LocationId);                
 
                 OrderView orderView = new OrderView()
                 {
@@ -195,11 +201,11 @@ namespace Project1.StoreApplication.Business.Controllers
             if (LocationInventory.itemIsAvailable(order.LocationId, order.ProductId) && order.Action.Equals("add"))
             {
                 Guid orderID = Guid.NewGuid();
-                Product product = _context.Products.FromSqlRaw<Product>($"select * from Products where Id = {order.ProductId}").First();
-                _context.Database.ExecuteSqlRaw($"insert into Orders values ('{orderID}','{Order.cartOrderDate}',{order.CustomerId},{order.LocationId},{product.ProductPrice})");
-                _context.Database.ExecuteSqlRaw($"insert into OrderItems (OrderId,ProductId) values ('{orderID}',{product.Id})");
-                _context.Database.ExecuteSqlRaw($"update LocationInventory set Stock = Stock - 1 where ProductId = {product.Id} and LocationId = {order.LocationId}");
-                _context.SaveChanges();
+                Product product = _productRepository.GetProduct(order.ProductId);
+                _orderRepository.AddNewOrder(orderID, Order.cartOrderDate, order.CustomerId, order.LocationId, product.ProductPrice);
+                _orderItemRepository.InsertOrderItem(orderID, product.Id);
+                _locationInventoryRepository.DecreaseItemStockBy1(product.Id,order.LocationId);
+                
                 OrderView orderView = new OrderView
                 {
                     Id = orderID,
@@ -257,15 +263,13 @@ namespace Project1.StoreApplication.Business.Controllers
         [HttpDelete("{id}")]
         public void DeleteOrder(Guid id)
         {
-            _context.Database.ExecuteSqlRaw($"delete from Orders where Id = '{id}'");
-            _context.SaveChanges();
+            _orderRepository.Delete(id);
         }
 
         [HttpDelete]
         public void DeleteOrder()
         {
-            _context.Database.ExecuteSqlRaw($"delete from Orders where OrderDate = '{Order.cartOrderDate}'");
-            _context.SaveChanges();
+            _orderRepository.Delete(Order.cartOrderDate);
         }
 
         //private bool OrderExists(Guid id)
@@ -275,7 +279,7 @@ namespace Project1.StoreApplication.Business.Controllers
 
         public Boolean itemIsInCart(Guid orderId, int productId) 
         {
-            List<OrderItem> orderItems = _context.OrderItems.FromSqlRaw<OrderItem>($"select * from OrderItems where OrderId = '{orderId}' and ProductId = {productId}").ToList();
+            List<OrderItem> orderItems = _orderItemRepository.GetAllInstancesOfParticularProductTypeInAnOrder(orderId,productId);
             if (orderItems.Count == 0) return false;
             else return true;
         }

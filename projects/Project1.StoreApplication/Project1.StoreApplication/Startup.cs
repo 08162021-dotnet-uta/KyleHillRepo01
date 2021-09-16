@@ -41,6 +41,8 @@ namespace Project1.StoreApplication
             services.AddScoped<ILocationRepository, LocationRepository>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IOrderItemRepository, OrderItemRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<ILocationInventoryRepository, LocationInventoryRepository>();            
 
 
             //services.AddSwaggerGen(c =>
