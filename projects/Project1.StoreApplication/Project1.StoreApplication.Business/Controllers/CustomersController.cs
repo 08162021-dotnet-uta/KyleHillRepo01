@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Project1.StoreApplication.Domain.Interfaces;
 using Project1.StoreApplication.Domain.Models;
 
@@ -15,10 +16,12 @@ namespace Project1.StoreApplication.Business.Controllers
     public class CustomersController : ControllerBase
     {
         private readonly ICustomerRepository _customerRepo;
+        private readonly ILogger<CustomersController> _logger;
 
-        public CustomersController(ICustomerRepository customerRepository)
+        public CustomersController(ICustomerRepository customerRepository, ILogger<CustomersController> logger)
         {
             _customerRepo = customerRepository;
+            _logger = logger;
         }
 
         // GET: api/Customers
@@ -44,14 +47,29 @@ namespace Project1.StoreApplication.Business.Controllers
 
         //method is async because copy pasted the template
         // GET: api/Customers/firstAndLastName
-        [HttpGet("firstName={firstName}&lastName={lastName}")]
-        public int ConfirmCustomerExists(string firstName, string lastName)
+        [HttpGet("firstName={firstName}&lastName={lastName}&userType={userType}")]
+        public int ConfirmCustomerExists(string firstName, string lastName, string userType)
         {
-            if (!Customer.isValidName(firstName, lastName)) return -2;
+            _logger.LogInformation($"{firstName} {lastName} attempted to sign in as a {userType} customer.");
+
+
+            if (!Customer.isValidName(firstName, lastName)) { _logger.LogInformation("Name was invalid"); return -2;  }
             var customer = _customerRepo.FindCustomer(firstName, lastName);
-            
-            if (customer.Count == 1) return customer[0].Id;
-            else return -1;
+
+
+            if (customer.Count == 1)
+                if (userType.Equals("returning")) { _logger.LogInformation("They signed in successfully"); return customer[0].Id; }
+                //can't repeat names
+                else { _logger.LogInformation("They were a new customer and used the name of a current customer"); return -1; }
+            else
+                //couldn't find you in the system
+                if (userType.Equals("returning")) {_logger.LogInformation("They mistyped their name"); return -3; }
+            else
+            {
+                _logger.LogInformation("They were a new user and successfully made an account");
+                Customer customer1 = new Customer() { FirstName = firstName, LastName = lastName };
+                return _customerRepo.AddCustomer(customer1);
+            }
         }
 
         // PUT: api/Customers/5
@@ -87,10 +105,17 @@ namespace Project1.StoreApplication.Business.Controllers
 
         // POST: api/Customers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public void PostCustomer(Customer customer)
+        //[HttpPost]
+        //public void PostCustomer(Customer customer)
+        //{
+        //    _customerRepo.AddCustomer(customer);
+        //}
+        [HttpGet("why/firstName={firstName}&lastName={lastName}")]
+        public int PostCustomer(string firstName, string lastName)
         {
-            _customerRepo.AddCustomer(customer);
+            Customer customer = new Customer() { FirstName = firstName, LastName = lastName };
+            int value = _customerRepo.AddCustomer(customer);
+            return value;
         }
 
         // DELETE: api/Customers/5

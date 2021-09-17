@@ -10,7 +10,7 @@ namespace Project1.StoreApplication.Domain.Interfaces
     public interface ICustomerRepository
     {
         List<Customer> FindCustomer(string firstName, string lastName);
-        void AddCustomer(Customer customer);
+        int AddCustomer(Customer customer);
         List<Customer> GetAll();
     }
 }

@@ -1,15 +1,23 @@
 ﻿let orderId = 0
+let totalPriceValue = 0
+
+window.onbeforeunload = function () {
+    return false;
+};
 
 if (performance.navigation.type == performance.navigation.TYPE_RELOAD) fetch(`api/orders/`, {method: 'DELETE'})
  
 document.addEventListener('visibilitychange', function () {
     if (document.visibilityState === 'hidden')
         if (orderId !== 0) {
+            let r = confirm("This will get rid of your cart");
             fetch(`api/orders/${orderId}`, {
                 method: 'DELETE'
             })
             document.getElementById("totalPrice").style.display = "none"; document.getElementById("cart").style.display = "none";
             orderId = 0
+                
+
         }
 })
 //to manage the cart we need the orderID, the chosen product, and chosen action
@@ -19,9 +27,8 @@ fetch('api/products')
     .then(data => _displayItems(data))
     .catch(error => console.error('Unable to get items.', error));
 
-//let id = sessionStorage.getItem('LocationID')
-let id = 1
-fetch(`api/locationInventories/${id}`)
+let locationId = sessionStorage.getItem('LocationID')
+fetch(`api/locationInventories/${locationId}`)
     .then(response => response.json())
     .then(data => _addStockColumn(data))
 
@@ -86,7 +93,7 @@ function _addStockColumn(data) {
 function orderUpdate(productId, action) {
 
     if (orderId === 0) {
-        let order = { LocationId: 1, CustomerId: 4, ProductId: productId, Action: action }
+        let order = { LocationId: sessionStorage.LocationID, CustomerId: sessionStorage.CustomerID, ProductId: productId, Action: action }
         fetch('api/orders', {
             method: 'POST',
             headers: {
@@ -116,15 +123,16 @@ function orderUpdate(productId, action) {
 function displayCart(data) {
 
     if (data.actionSucceeded === false) window.alert(data.message)
-    let totalPrice = document.getElementById("totalPrice")
+    let totalPriceElement = document.getElementById("totalPrice")
+    totalPriceValue = data.totalPrice
     //handles case of failing to add to an empty cart
-    if (data.orderItems.length === 0) { totalPrice.style.display = "none"; document.getElementById("cart").style.display = "none"; return }
+    if (data.orderItems.length === 0) { totalPriceElement.style.display = "none"; document.getElementById("cart").style.display = "none"; return }
     //handles case of adding first item to cart
     if (orderId === 0) orderId = data.id
     let table = document.getElementById("cartBody")
     table.innerHTML = ''
     document.getElementById("totalPrice").innerHTML = data.totalPrice
-    document.getElementById("cart").style.display = "block"; totalPrice.style.display = "block";
+    document.getElementById("cart").style.display = "block"; totalPriceElement.style.display = "block";
     data.orderItems.forEach(item => {
 
         let tr = table.insertRow();
@@ -143,7 +151,7 @@ function displayCart(data) {
 
 
 function submitOrder() {
-    if (orderId === 0) { window.alert("Your cart is empty."); return }
+    if (totalPriceValue === 0) { window.alert("Your cart is empty."); return }
     let order = { OrderId: orderId }
     fetch('api/orders/submitOrder', {
         method: 'PUT',

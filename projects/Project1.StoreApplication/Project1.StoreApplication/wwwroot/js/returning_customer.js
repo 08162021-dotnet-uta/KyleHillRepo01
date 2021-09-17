@@ -12,15 +12,14 @@ function confirmExists() {
     const firstName = document.getElementById('add-first-name').value.trim();
     const lastName = document.getElementById('add-last-name').value.trim();
 
-    fetch(`${uri}/firstName=${firstName}&lastName=${lastName}`, {
+    fetch(`${uri}/firstName=${firstName}&lastName=${lastName}&userType=${userType}`, {
         method: 'GET'
     })
         .then(response => response.json())
         .then(data => {
-            if (data >= 0 && userType === 'returning') { sessionStorage.setItem('CustomerID', data); clearInputs(); window.location = "customer_home_page.html"; }
-            if (data >= 0 && userType === 'new') failureNotice.innerHTML = "That name has already been taken."
-            if (data === -1 && userType === 'new') { addCustomer(firstName, lastName); sessionStorage.setItem('newOrReturning', 'returning'); clearInputs(); window.location = "customer_home_page.html" }
-            if (data === -1 && userType === 'returning') failureNotice.innerHTML = "We couldn't find you in the system."
+            if (data >= 0) { sessionStorage.setItem('CustomerID', data); clearInputs(); window.location = "customer_home_page.html"; }
+            if (data === -1) failureNotice.innerHTML = "That name has already been taken."
+            if (data === -3) failureNotice.innerHTML = "We couldn't find you in the system."
             if (data === -2) failureNotice.innerHTML = "Each name can have a max of 50 charactes."
         });
 }
@@ -30,20 +29,29 @@ function clearInputs() {
     document.getElementById('add-last-name').value="";
 }
 
-function addCustomer(firstName,lastName) {
-    
+function addCustomer(firstName, lastName) {
+
     const Customer = {
+        Id: 0,
         FirstName: firstName,
         LastName: lastName
     };
 
-    fetch(uri, {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(Customer)
+    fetch(`${uri}/why/firstName=${firstName}&lastName=${lastName}`, {
+        method: 'GET'
     })
+        .then(response => response.json())
+        .then(data => {
+            sessionStorage.setItem('CustomerID', data); console.log(data);
+        });
+        
+    //fetch(uri, {
+    //    method: 'POST',
+    //    headers: {
+    //        'Accept': 'application/json',
+    //        'Content-Type': 'application/json'
+    //    },
+    //    body: JSON.stringify(Customer)
+    //})
 }
 

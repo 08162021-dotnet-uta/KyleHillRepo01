@@ -9,6 +9,7 @@ using Project1.StoreApplication.Domain.Models;
 using Project1.StoreApplication.Domain.ViewModels;
 using Project1.StoreApplication.Domain.InputModels;
 using Project1.StoreApplication.Domain.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace Project1.StoreApplication.Business.Controllers
 {
@@ -22,10 +23,11 @@ namespace Project1.StoreApplication.Business.Controllers
         private readonly ILocationRepository _locationRepository;
         private readonly IProductRepository _productRepository;
         private readonly ILocationInventoryRepository _locationInventoryRepository;
-        
+        private readonly ILogger<OrdersController> _logger;
 
         public OrdersController(IOrderItemRepository orderItemRepository , IOrderRepository orderRepository, ICustomerRepository customerRepository,
-        ILocationRepository locationRepository, IProductRepository productRepository, ILocationInventoryRepository locationInventoryRepository)
+        ILocationRepository locationRepository, IProductRepository productRepository, ILocationInventoryRepository locationInventoryRepository, 
+        ILogger<OrdersController> logger)
         {
             _orderItemRepository = orderItemRepository;
             _orderRepository = orderRepository;
@@ -33,6 +35,7 @@ namespace Project1.StoreApplication.Business.Controllers
             _locationRepository = locationRepository;
             _productRepository = productRepository;
             _locationInventoryRepository = locationInventoryRepository;
+            _logger = logger;
         }
 
         //method is async because copy pasted the template
@@ -111,6 +114,13 @@ namespace Project1.StoreApplication.Business.Controllers
                     if (orderView.LocationId == location.Id)
                         orderView.LocationName = location.CityName; 
             }
+            if (orderViews.Count != 0)
+            {
+                if (idType.Equals("customer")) _logger.LogInformation($"{orderViews[0].CustomerName} viewed their {orderViews.Count} orders. ");
+                else _logger.LogInformation($"{orderViews[0].LocationName} location viewed their {orderViews.Count} orders. ");
+                _logger.LogInformation($"The order dates range from {orderViews[0].OrderDate} up to {orderViews.LastOrDefault().OrderDate}");
+            }
+            else _logger.LogInformation($"{idType} {id} viewed their empty list of orders.");
             return orderViews;
         }
 
@@ -134,6 +144,7 @@ namespace Project1.StoreApplication.Business.Controllers
         public void submitOrder(OrderInput order)
         {
             _orderRepository.SubmitOrder(order.OrderId);
+            _logger.LogInformation($"Order {order.OrderId} was submitted.");
             
         }
 
@@ -153,6 +164,7 @@ namespace Project1.StoreApplication.Business.Controllers
                 _orderRepository.UpdateTotalPrice(order.OrderId, totalPrice);
                 _orderItemRepository.InsertOrderItem(order.OrderId, product.Id);
                 _locationInventoryRepository.DecreaseItemStockBy1(product.Id, orderOfInterest.LocationId);
+                _logger.LogInformation($"{product.Name1} was added to order {order.OrderId}. Brought total price to {totalPrice}.");
 
                 OrderView orderView = new OrderView()
                 {
@@ -160,7 +172,7 @@ namespace Project1.StoreApplication.Business.Controllers
                     OrderItems = OrderView.GetOrderItemViews(order.OrderId),
                     actionSucceeded = true
                 };
-
+                _logger.LogInformation($"Order now has {orderView.OrderItems.Count} different types of items.");
                 return orderView;
             }
             else if (order.Action.Equals("remove") && itemIsInCart(order.OrderId,order.ProductId))

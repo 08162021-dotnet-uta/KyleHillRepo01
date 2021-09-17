@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Project1.StoreApplication.Domain.Interfaces;
 using Project1.StoreApplication.Domain.Models;
 using System;
@@ -20,10 +21,12 @@ namespace Project1.StoreApplication.Storage
         { 
             return _context.Customers.FromSqlRaw<Customer>($"select * from Customers where FirstName = '{firstName}' and LastName = '{lastName}'").ToList();
         }
-        public void AddCustomer(Customer customer)
+        public int AddCustomer(Customer customer)
         {
             _context.Database.ExecuteSqlRaw($"insert into Customers (FirstName,LastName) values ('{customer.FirstName}','{customer.LastName}')");
             _context.SaveChanges();
+            Customer customer1 = _context.Customers.FromSqlRaw($"select * from Customers where FirstName = '{customer.FirstName}' and LastName = '{customer.LastName}'").First();
+            return customer1.Id;
         }
         public List<Customer> GetAll()
         { 
