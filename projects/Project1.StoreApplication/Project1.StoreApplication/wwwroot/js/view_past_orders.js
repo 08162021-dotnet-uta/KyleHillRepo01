@@ -28,17 +28,29 @@ function _displayOrders(data) {
         //document.getElementById("myUL").appendChild(y);
         //document.body.innerHTML += `<p>${item.orderDate}</p>`
         //document.body.innerHTML += `<p>${item.customerName}</p>`
-        document.body.innerHTML += `<ul style="list-style-type:none;">`
-            document.body.innerHTML += `<li>${item.orderDate}</li>`
-            document.body.innerHTML += `<li>${item.customerName}</li>`
-            document.body.innerHTML += `<li>${item.locationName}</li>`
-            document.body.innerHTML += `<li>${item.totalPrice}</li>`
-            document.body.innerHTML += "<li>-------------------------------------------</li>"
-            document.body.innerHTML += `<li>Order Items</li>`
-        for (let i = 0; i < item.orderItems.length; i++)
-            document.body.innerHTML += `<li>${item.orderItems[i].name1}</li>`
-        document.body.innerHTML += `</ul>`
-  
+
+        //document.body.innerHTML += `<ul style="list-style-type:none;">`
+        //    document.body.innerHTML += `<li>${item.orderDate}</li>`
+        //    document.body.innerHTML += `<li>${item.customerName}</li>`
+        //    document.body.innerHTML += `<li>${item.locationName}</li>`
+        //    document.body.innerHTML += `<li>${item.totalPrice}</li>`
+        //    document.body.innerHTML += "<li>-------------------------------------------</li>"
+        //    document.body.innerHTML += `<li>Order Items</li>`
+        //for (let i = 0; i < item.orderItems.length; i++)
+        //    document.body.innerHTML += `<li>${item.orderItems[i].name1}</li>`
+
+
+        //document.body.innerHTML += `<ul style="list-style-type:none;">`
+        //    document.body.innerHTML += `<li>${item.orderDate}</li>`
+        //    document.body.innerHTML += `<li>${item.customerName}</li>`
+        //    document.body.innerHTML += `<li>${item.locationName}</li>`
+        //    document.body.innerHTML += `<li>${item.totalPrice}</li>`
+        //    document.body.innerHTML += "<li>-------------------------------------------</li>"
+        //    document.body.innerHTML += `<li>Order Items</li>`
+        //for (let i = 0; i < item.orderItems.length; i++)
+        //    document.body.innerHTML += `<li>${item.orderItems[i].name1}</li>`
+        //document.body.innerHTML += `</ul>`
+        console.log(item)
         
 
 

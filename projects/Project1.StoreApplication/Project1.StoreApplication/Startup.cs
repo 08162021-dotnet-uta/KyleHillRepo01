@@ -34,7 +34,11 @@ namespace Project1.StoreApplication
 
             services.AddControllers();
                     //.AddApplicationPart(typeof(CustomersController).Assembly);
-            services.AddDbContext<Kyles_Pizza_ShopContext>();
+            services.AddDbContext<Kyles_Pizza_ShopContext>(options =>
+            {
+                if (!options.IsConfigured)
+                    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+            });
 
             //registering classes with the DI system.
             services.AddScoped<IProductRepository, ProductRepository>();

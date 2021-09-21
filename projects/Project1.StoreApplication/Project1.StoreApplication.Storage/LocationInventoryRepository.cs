@@ -17,7 +17,7 @@ namespace Project1.StoreApplication.Storage
         public LocationInventoryRepository(Kyles_Pizza_ShopContext context)
         { _context = context; }
 
-        public IEnumerable<LocationInventory> GetLocationInventory(int LocationId)
+        public List<LocationInventory> GetLocationInventory(int LocationId)
         {
             return _context.LocationInventories.FromSqlRaw<LocationInventory>($"select * from LocationInventory where LocationId = {LocationId} order by ProductId").ToList();
         }

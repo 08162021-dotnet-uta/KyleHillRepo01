@@ -9,7 +9,7 @@ namespace Project1.StoreApplication.Domain.Interfaces
 {
     public interface ILocationInventoryRepository
     {
-        IEnumerable<LocationInventory> GetLocationInventory(int LocationId);
+        List<LocationInventory> GetLocationInventory(int LocationId);
         public void DecreaseItemStockBy1(int productId, int locationId);
         void IncreaseItemStockBy1(int productId, int locationId);
     }
