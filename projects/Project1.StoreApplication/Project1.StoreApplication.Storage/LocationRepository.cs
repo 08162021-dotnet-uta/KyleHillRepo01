@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Project1.StoreApplication.Domain.Interfaces;
+using Project1.StoreApplication.Domain.Interfaces.Repository;
 
 namespace Project1.StoreApplication.Storage
 {

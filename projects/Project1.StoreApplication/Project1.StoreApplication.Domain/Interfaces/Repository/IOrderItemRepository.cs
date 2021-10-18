@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project1.StoreApplication.Domain.Interfaces
+namespace Project1.StoreApplication.Domain.Interfaces.Repository
 {
     public interface IOrderItemRepository
     {

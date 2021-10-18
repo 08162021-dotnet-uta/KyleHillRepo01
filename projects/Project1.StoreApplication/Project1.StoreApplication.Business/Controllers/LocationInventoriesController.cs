@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Project1.StoreApplication.Domain.Interfaces;
+using Project1.StoreApplication.Domain.Interfaces.Repository;
 using Project1.StoreApplication.Domain.Models;
 
 namespace Project1.StoreApplication.Business.Controllers

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Project1.StoreApplication.Domain.Models;
 using Microsoft.Extensions.Configuration;
 using Project1.StoreApplication.Storage;
-using Project1.StoreApplication.Domain.Interfaces;
+using Project1.StoreApplication.Domain.Interfaces.Repository;
 
 namespace Project1.StoreApplication.Business.Controllers
 {

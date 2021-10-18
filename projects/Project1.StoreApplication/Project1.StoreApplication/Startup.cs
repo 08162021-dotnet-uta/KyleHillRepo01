@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Project1.StoreApplication.Domain.Models;
 using Project1.StoreApplication.Business.Controllers;
-using Project1.StoreApplication.Domain.Interfaces;
+using Project1.StoreApplication.Domain.Interfaces.Repository;
 using Project1.StoreApplication.Storage;
 
 namespace Project1.StoreApplication
@@ -60,7 +60,8 @@ namespace Project1.StoreApplication
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                //app.UseExceptionHandler("/Error");
+                //app.UseDeveloperExceptionPage();
                 //app.UseSwagger();
                 //app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Project1.StoreApplication v1"));
             }
